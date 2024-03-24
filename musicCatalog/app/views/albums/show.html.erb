@@ -1,6 +1,7 @@
 <div class="cont">
   <div class="d-flex justify-content-between align-items-center">
     <h1><%= @album.title %></h1>
+    <% if current_user.present? && current_user.role == 'admin' %>
     <div class="d-flex justify-content-end">
       <div class="me-2">
         <%= button_to "Edit album", edit_album_path(@album), method: :get, class: "btn btn-primary" %>
@@ -10,7 +11,7 @@
         <%= button_to "Delete album", album_path(@album), method: :delete, class: "btn btn-danger" %>
       </div>
     </div>
-    
+    <% end %>
   </div>
 
   <div>
@@ -24,7 +25,7 @@
 
 
   <div id="playlists-container" style="display: none;">
-    <% if current_user.playlists.any? %>
+    <% if current_user.present? && current_user.playlists.any? %>
       <% current_user.playlists.each do |playlist| %>
         <label>
           <input type="checkbox" name="playlist_ids[]" value="<%= playlist.id %>">
@@ -52,13 +53,15 @@
           <span data-audio="<%= path_to_audio_file(song) %>" class="song-title"><%= song.title %></span>
           <div class="d-flex justify-content-end">
             <div class="me-2">
-              <% if current_user && current_user.role == 'admin' %>
+              <% if current_user.present? && current_user.role == 'admin' %>
                 <%= button_to "Delete song", album_song_path(@album, song), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger me-2 me-n2" %>
               <% end %>
             </div>
-          <div>
-            <button id="add-to-playlist-btn" class="btn btn-primary" data-song-id="<%= song.id %>">Add to playlist</button>
-          </div>
+            <% if current_user.present? %>
+              <div>
+                <button id="add-to-playlist-btn" class="btn btn-primary" data-song-id="<%= song.id %>">Add to playlist</button>
+              </div>
+            <% end %>
         </div>
       </li>
       <% end %>

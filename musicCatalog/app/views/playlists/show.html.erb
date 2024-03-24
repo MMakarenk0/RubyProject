@@ -5,8 +5,10 @@
         <% if song.persisted? %>
           <li id="song-<%= song.id %>" class="song d-flex justify-content-between align-items-center mt-2">
             <span data-audio="<%= path_to_audio_file(song) %>" class="song-title fw-bold"><%= song.title %></span>
+            <% if current_user.present? && current_user == @playlist.user %>
             <button class="remove-song-btn btn btn-danger" data-song-id="<%= song.id %>" data-playlist-id="<%= @playlist.id %>">Remove from playlist</button>
-        </li>
+            <% end %>
+          </li>
         <% end %>
       <% end %>
     </ul>
