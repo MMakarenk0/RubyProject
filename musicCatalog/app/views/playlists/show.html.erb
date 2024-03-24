@@ -1,0 +1,67 @@
+<div class="cont">
+    <h2>Playlist songs:</h2>
+    <ul id="song-list">
+      <% @songs.each do |song| %>
+        <% if song.persisted? %>
+          <li id="song-<%= song.id %>" class="song d-flex justify-content-between align-items-center mt-2">
+            <span data-audio="<%= path_to_audio_file(song) %>" class="song-title fw-bold"><%= song.title %></span>
+            <button class="remove-song-btn btn btn-danger" data-song-id="<%= song.id %>" data-playlist-id="<%= @playlist.id %>">Remove from playlist</button>
+        </li>
+        <% end %>
+      <% end %>
+    </ul>
+
+<script>
+
+  function ButtonsListnererWrapper(){
+    const btnsToRemoveSongs = document.querySelectorAll('.remove-song-btn');
+
+  btnsToRemoveSongs.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const songId = btn.dataset.songId;
+      const playlistId = btn.dataset.playlistId;
+
+      fetch(`/playlists/${playlistId}/remove_song_from_playlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': '<%= form_authenticity_token %>'
+        },
+        body: JSON.stringify({ song_id: songId })
+      })
+      .then(response => {
+        if (response.ok) {
+          location.reload();
+        } else {
+          console.error('Error removing song from playlist:', response.statusText);
+        }
+      })
+      .catch(error => console.error('Error removing song from playlist:', error));
+    });
+  });
+  }
+  
+  ButtonsListnererWrapper();
+
+    document.addEventListener('click', function(event) {
+      const clickedElement = event.target.closest('.song-title');
+  
+      if (clickedElement) {
+        const audioPlayer = document.getElementById('audio-player');
+        const audioUrl = clickedElement.dataset.audio;
+  
+        audioPlayer.src = audioUrl;
+        audioPlayer.pause();
+        //Avoid the Promise Error
+        setTimeout(function () {      
+          audioPlayer.play();
+        }, 150);
+        audioPlayer.play();
+      }
+    });
+
+  
+
+</script>
+
+</div>

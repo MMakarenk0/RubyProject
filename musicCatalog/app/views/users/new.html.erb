@@ -1,0 +1,41 @@
+<div class="cont">
+  <h1>Sign up</h1>
+
+  <%= form_with(model: @user, url: users_path, data: { turbo: false }) do |form| %>
+    <% if @user.errors.any? %>
+      <div id="error_explanation">
+        <h2>Sign up error</h2>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  
+    <div class="field mt-2">
+      <%= form.label :nickname %>
+      <%= form.text_field :nickname %>
+    </div>
+  
+    <div class="field mt-2">
+      <%= form.label :password %>
+      <%= form.password_field :password %>
+    </div>
+  
+    <div class="field mt-2">
+      <%= form.label :password_confirmation %>
+      <%= form.password_field :password_confirmation %>
+    </div>
+  
+    <div class="field mt-2">
+      <%= form.label :role %>
+      <%= form.select :role, [['User', 'user'], ['Admin', 'admin']], prompt: 'Select Role' %>
+    </div>
+  
+    <div class="actions mt-4">
+      <%= form.submit "Sign up" %>
+    </div>
+  <% end %>
+</div>
+

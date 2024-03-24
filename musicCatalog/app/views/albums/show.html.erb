@@ -1,0 +1,129 @@
+<div class="cont">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1><%= @album.title %></h1>
+    <div class="d-flex justify-content-end">
+      <div class="me-2">
+        <%= button_to "Edit album", edit_album_path(@album), method: :get, class: "btn btn-primary" %>
+      </div>
+
+      <div class="me-2">
+        <%= button_to "Delete album", album_path(@album), method: :delete, class: "btn btn-danger" %>
+      </div>
+    </div>
+    
+  </div>
+
+  <div>
+    <h2>Album Details</h2>
+    <ul>
+      <li><strong>Artist:</strong> <%= @album.artist %></li>
+      <li><strong>Release Year:</strong> <%= @album.release_year %></li>
+      <li><strong>Copies:</strong> <%= @album.copies %></li>
+    </ul>
+  </div>
+
+
+  <div id="playlists-container" style="display: none;">
+    <% if current_user.playlists.any? %>
+      <% current_user.playlists.each do |playlist| %>
+        <label>
+          <input type="checkbox" name="playlist_ids[]" value="<%= playlist.id %>">
+          <%= playlist.name %>
+        </label>
+      <% end %>
+      <button id="save-to-playlists-btn">Save</button>
+    <% else %>
+      <p>No playlists found</p>
+    <% end %>
+  </div>
+  
+
+  <h2>Songs</h2>
+  <%= form_with(model: @song, url: album_songs_path(@album), multipart: true) do |form| %>
+    <%= form.text_field :title, placeholder: "Song title" %>
+    <%= form.file_field :audio, accept: ".mp3, .wav, .m4a" %>
+    <%= form.submit "Add song" %>
+  <% end %>
+
+  <ul id="song-list">
+    <% @songs.each do |song| %>
+      <% if song.persisted? %>
+        <li id="song-<%= song.id %>" class="song d-flex justify-content-between align-items-center mt-2">
+          <span data-audio="<%= path_to_audio_file(song) %>" class="song-title"><%= song.title %></span>
+          <div class="d-flex justify-content-end">
+            <div class="me-2">
+              <% if current_user && current_user.role == 'admin' %>
+                <%= button_to "Delete song", album_song_path(@album, song), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger me-2 me-n2" %>
+              <% end %>
+            </div>
+          <div>
+            <button id="add-to-playlist-btn" class="btn btn-primary" data-song-id="<%= song.id %>">Add to playlist</button>
+          </div>
+        </div>
+      </li>
+      <% end %>
+    <% end %>
+  </ul>
+  
+  <script>
+
+    function ButtonsListnererWrapper(){
+      const addToPlaylistBtn = document.getElementById('add-to-playlist-btn');
+      const playlistsContainer = document.getElementById('playlists-container');
+      const songId = addToPlaylistBtn.dataset.songId;
+  
+      if (addToPlaylistBtn){
+        addToPlaylistBtn.addEventListener('click', function() {
+        playlistsContainer.style.display = 'block';
+      });
+      }
+      
+  
+      const saveToPlaylistsBtn = document.getElementById('save-to-playlists-btn');
+      saveToPlaylistsBtn.addEventListener('click', function() {
+        const selectedPlaylists = document.querySelectorAll('input[name="playlist_ids[]"]:checked');
+        const selectedPlaylistIds = [];
+  
+        selectedPlaylists.forEach(function(playlist) {
+          const playlistId = playlist.value;
+          selectedPlaylistIds.push(playlistId);
+        });
+  
+        fetch(`/playlists/${selectedPlaylistIds[0]}/add_to_playlists`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': '<%= form_authenticity_token %>'
+          },
+          body: JSON.stringify({ playlist_ids: selectedPlaylistIds, song_id: songId })
+        })
+        .then(response => {
+          if (response.ok) {
+            location.reload();
+          } else {
+            console.error('Error adding song to playlists:', response.statusText);
+          }
+        })
+        .catch(error => console.error('Error adding song to playlists:', error));
+      });
+    }
+  
+    ButtonsListnererWrapper();
+    
+
+    document.addEventListener('click', function(event) {
+      const clickedElement = event.target.closest('.song-title');
+  
+      if (clickedElement) {
+        const audioPlayer = document.getElementById('audio-player');
+        const audioUrl = clickedElement.dataset.audio;
+  
+        audioPlayer.src = audioUrl;
+        audioPlayer.style.display = 'block';
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        setTimeout(function() {audioPlayer.play()}, 0);
+      }
+    });
+  </script>
+</div>

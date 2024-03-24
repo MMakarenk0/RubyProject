@@ -1,0 +1,29 @@
+<div class="cont">
+  <h1>Creating new playlist</h1>
+    <%= form_with(model: @playlist, url: playlists_path, data: { turbo: false }) do |form| %>
+    <% if @playlist.errors.any? %>
+      <div id="error_explanation">
+        <h2>Playlist creating error</h2>
+        <ul>
+          <% @playlist.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  
+    <div class="field mt-2">
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+  
+    <div class="field mt-2">
+      <%= form.label :public %>
+      <%= form.check_box :public %>
+    </div>
+  
+    <div class="actions mt-4">
+      <%= form.submit "Create playlist" %>
+    </div>
+  <% end %>
+</div>

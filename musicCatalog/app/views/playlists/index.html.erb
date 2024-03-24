@@ -1,0 +1,12 @@
+<div class="cont fw-bold">
+    <h1>All public playlists</h1>
+  </div>
+  
+  <% @public_playlists.each do |playlist| %>
+    <div class="cont mt-2 fw-bold">
+      <p><%= link_to playlist.name, playlist_path(playlist) %></p>
+      <p><%= playlist.user.nickname %></p>
+    </div>
+    
+  <% end %>
+  

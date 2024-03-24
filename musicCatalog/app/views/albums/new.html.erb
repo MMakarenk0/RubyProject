@@ -1,0 +1,42 @@
+<div class="cont">
+    <h1>Creating new album</h1>
+  
+    <%= form_with(model: @album, url: albums_path, data: { turbo: false }) do |form| %>
+      <% if @album.errors.any? %>
+        <div id="error_explanation">
+          <h2>Sign up error</h2>
+          <ul>
+            <% @album.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    
+      <div class="field mt-2">
+        <%= form.label :title %>
+        <%= form.text_field :title %>
+      </div>
+    
+      <div class="field mt-2">
+        <%= form.label :artist %>
+        <%= form.text_field :artist %>
+      </div>
+    
+      <div class="field mt-2">
+        <%= form.label :release_year %>
+        <%= form.number_field :release_year %>
+      </div>
+
+      <div class="field mt-2">
+        <%= form.label :copies %>
+        <%= form.number_field :copies %>
+      </div>
+    
+      <div class="actions mt-4">
+        <%= form.submit "Create album" %>
+      </div>
+    <% end %>
+  </div>
+  
+  

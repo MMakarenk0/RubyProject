@@ -1,0 +1,20 @@
+<div class="cont fw-bold">
+    <h1><%= current_user.nickname %></h1>
+    <h2>Role: <%= current_user.role %></h2>
+    <h2>Registration date: <%= current_user.created_at.strftime("%Y-%m-%d %H:%M:%S") %></h2>
+</div>
+
+<div class="cont mt-4 fw-bold">
+    <% if current_user.playlists.any? %>
+    <h2>Your playlists:</h2>
+    <ul>
+      <% current_user.playlists.each do |playlist| %>
+        <li><%= link_to playlist.name, playlist_path(playlist) %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>You don't have any playlists yet.</p>
+  <% end %>
+  
+
+</div>

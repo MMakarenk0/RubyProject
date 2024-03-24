@@ -1,0 +1,18 @@
+<div class="cont fw-bold">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>All albums</h1>
+    <div class="d-flex justify-content-end">
+      <%= link_to "Random Album", random_album_albums_path, class: "btn btn-primary" %>
+    </div>
+  </div>
+</div>
+
+<div class="album-container">
+  <% @albums.each do |album| %>
+    <div class="album-item cont mt-2">
+      <p><%= link_to album.title, album_path(album) %></p>
+      <p><%= album.artist %></p>
+      <p><%= album.release_year %></p>
+    </div>
+  <% end %>
+</div>
