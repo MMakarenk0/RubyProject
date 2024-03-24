@@ -38,3 +38,7 @@
 !/app/assets/builds/.keep
 
 /node_modules
+
+# Ignore audio files
+/public/audio/*
+!/public/audio/audio.mp3
