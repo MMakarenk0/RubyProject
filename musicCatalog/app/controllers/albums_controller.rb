@@ -12,7 +12,7 @@ class AlbumsController < ApplicationController
     if @album.save
       redirect_to album_path(@album)
     else
-      flash.now[:alert] = "Error creating album"
+      flash.now[:alert] = 'Error creating album'
     end
   end
 
@@ -28,14 +28,14 @@ class AlbumsController < ApplicationController
     redirect_to albums_path
   end
 
-  def edit 
+  def edit
     @album = Album.find(params[:id])
-  end 
+  end
 
   def update
     @album = Album.find(params[:id])
     if @album.update(album_params)
-      redirect_to album_path(@album), notice: "Album updated successfully"
+      redirect_to album_path(@album), notice: 'Album updated successfully'
     else
       render :edit
     end

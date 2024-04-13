@@ -1,6 +1,5 @@
 class SessionsController < ApplicationController
-  def new
-  end
+  def new; end
 
   def create
     user_params = params.require(:session)
@@ -12,7 +11,7 @@ class SessionsController < ApplicationController
 
       redirect_to root_path, notice: 'You have successfully logged in'
     else
-      flash[:alert] = "Wrong username or password"
+      flash[:alert] = 'Wrong username or password'
 
       render :new
     end

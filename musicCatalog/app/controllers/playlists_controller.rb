@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  def new 
+  def new
     @playlist = Playlist.new
   end
 
@@ -39,29 +39,29 @@ class PlaylistsController < ApplicationController
   def add_to_playlists
     song_id = params[:song_id]
     playlist_ids = params[:playlist_ids]
-  
+
     song = Song.find(song_id)
     playlists = Playlist.where(id: playlist_ids)
-  
+
     playlists.each do |playlist|
       playlist.songs << song
       playlist.save
     end
-  
-    render json: { message: "Song added to playlists successfully" }, status: :ok
+
+    render json: { message: 'Song added to playlists successfully' }, status: :ok
   end
 
   def remove_song_from_playlist
     song_id = params[:song_id]
     playlist_id = params[:id]
-  
+
     playlist = Playlist.find(playlist_id)
     song = playlist.songs.find(song_id)
     playlist.songs.delete(song)
-  
-    render json: { message: "Song removed from playlist successfully" }, status: :ok
+
+    render json: { message: 'Song removed from playlist successfully' }, status: :ok
   end
-  
+
 
   private
 

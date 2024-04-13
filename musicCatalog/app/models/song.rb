@@ -2,7 +2,7 @@ class Song < ApplicationRecord
   belongs_to :album
 
   validates :title, presence: true
-  
+
   after_destroy :delete_audio_file
 
   private

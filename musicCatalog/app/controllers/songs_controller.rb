@@ -31,8 +31,6 @@ class SongsController < ApplicationController
       end
       return audio_path.to_s
     end
-    return nil
+    nil
   end
-  
-  
 end
